@@ -1,0 +1,296 @@
+-- GUI Script avec Username, Task, Time et FPS
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Créer le ScreenGui principal
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "TaskTrackerGUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
+
+-- Fonction pour créer un UICorner (pour arrondir les bords)
+local function createUICorner(parent, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 12)
+    corner.Parent = parent
+    return corner
+end
+
+-- Créer le cadre principal
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 400, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -200, 0.1, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 126, 64) -- Couleur orange comme dans l'image
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+createUICorner(MainFrame)
+
+-- Créer le titre en haut
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Size = UDim2.new(1, 0, 0, 40)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "Thời Gian Còn Lại: 00:00"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 0) -- Couleur jaune comme dans l'image
+TitleLabel.TextSize = 24
+TitleLabel.Parent = MainFrame
+
+-- Créer le contenu principal
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Size = UDim2.new(0.9, 0, 0.6, 0)
+ContentFrame.Position = UDim2.new(0.05, 0, 0.25, 0)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = MainFrame
+createUICorner(ContentFrame)
+
+-- Créer les onglets
+local TabsFrame = Instance.new("Frame")
+TabsFrame.Name = "TabsFrame"
+TabsFrame.Size = UDim2.new(1, 0, 0, 30)
+TabsFrame.Position = UDim2.new(0, 0, 0, 0)
+TabsFrame.BackgroundTransparency = 1
+TabsFrame.Parent = ContentFrame
+
+-- Onglet Information
+local InfoTab = Instance.new("TextButton")
+InfoTab.Name = "InfoTab"
+InfoTab.Size = UDim2.new(0.5, 0, 1, 0)
+InfoTab.Position = UDim2.new(0, 0, 0, 0)
+InfoTab.BackgroundColor3 = Color3.fromRGB(100, 181, 246) -- Bleu clair comme dans l'image
+InfoTab.Text = "Information"
+InfoTab.Font = Enum.Font.GothamSemibold
+InfoTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfoTab.TextSize = 18
+InfoTab.Parent = TabsFrame
+createUICorner(InfoTab, 8)
+
+-- Onglet Settings
+local SettingsTab = Instance.new("TextButton")
+SettingsTab.Name = "SettingsTab"
+SettingsTab.Size = UDim2.new(0.5, 0, 1, 0)
+SettingsTab.Position = UDim2.new(0.5, 0, 0, 0)
+SettingsTab.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
+SettingsTab.Text = "Setting"
+SettingsTab.Font = Enum.Font.GothamSemibold
+SettingsTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+SettingsTab.TextSize = 18
+SettingsTab.Parent = TabsFrame
+createUICorner(SettingsTab, 8)
+
+-- Contenu des informations
+local InfoContent = Instance.new("Frame")
+InfoContent.Name = "InfoContent"
+InfoContent.Size = UDim2.new(1, 0, 0.85, 0)
+InfoContent.Position = UDim2.new(0, 0, 0.15, 0)
+InfoContent.BackgroundTransparency = 1
+InfoContent.Parent = ContentFrame
+
+-- Affichage du nom d'utilisateur
+local UsernameLabel = Instance.new("TextLabel")
+UsernameLabel.Name = "UsernameLabel"
+UsernameLabel.Size = UDim2.new(1, 0, 0.2, 0)
+UsernameLabel.Position = UDim2.new(0, 0, 0, 0)
+UsernameLabel.BackgroundTransparency = 1
+UsernameLabel.Font = Enum.Font.GothamMedium
+UsernameLabel.Text = "Username: " .. LocalPlayer.Name -- Affiche le nom complet de l'utilisateur
+UsernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+UsernameLabel.TextSize = 18
+UsernameLabel.TextXAlignment = Enum.TextXAlignment.Center
+UsernameLabel.Parent = InfoContent
+
+-- Affichage de la tâche
+local TaskLabel = Instance.new("TextLabel")
+TaskLabel.Name = "TaskLabel"
+TaskLabel.Size = UDim2.new(1, 0, 0.2, 0)
+TaskLabel.Position = UDim2.new(0, 0, 0.2, 0)
+TaskLabel.BackgroundTransparency = 1
+TaskLabel.Font = Enum.Font.GothamBold
+TaskLabel.Text = "Task: FULL GEAR DRACO CHÂU ANH"
+TaskLabel.TextColor3 = Color3.fromRGB(255, 215, 0) -- Couleur or
+TaskLabel.TextSize = 18
+TaskLabel.TextXAlignment = Enum.TextXAlignment.Center
+TaskLabel.Parent = InfoContent
+
+-- Affichage du temps
+local TimeLabel = Instance.new("TextLabel")
+TimeLabel.Name = "TimeLabel"
+TimeLabel.Size = UDim2.new(1, 0, 0.2, 0)
+TimeLabel.Position = UDim2.new(0, 0, 0.4, 0)
+TimeLabel.BackgroundTransparency = 1
+TimeLabel.Font = Enum.Font.GothamMedium
+TimeLabel.Text = "Time: 0m 0s - FPS: 0"
+TimeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TimeLabel.TextSize = 18
+TimeLabel.TextXAlignment = Enum.TextXAlignment.Center
+TimeLabel.Parent = InfoContent
+
+-- Affichage du Job ID
+local JobIdLabel = Instance.new("TextLabel")
+JobIdLabel.Name = "JobIdLabel"
+JobIdLabel.Size = UDim2.new(1, 0, 0.2, 0)
+JobIdLabel.Position = UDim2.new(0, 0, 0.6, 0)
+JobIdLabel.BackgroundTransparency = 1
+JobIdLabel.Font = Enum.Font.GothamMedium
+JobIdLabel.Text = "Job Id"
+JobIdLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+JobIdLabel.TextSize = 18
+JobIdLabel.TextXAlignment = Enum.TextXAlignment.Center
+JobIdLabel.Parent = InfoContent
+
+-- Contenu des paramètres (initialement caché)
+local SettingsContent = Instance.new("Frame")
+SettingsContent.Name = "SettingsContent"
+SettingsContent.Size = UDim2.new(1, 0, 0.85, 0)
+SettingsContent.Position = UDim2.new(0, 0, 0.15, 0)
+SettingsContent.BackgroundTransparency = 1
+SettingsContent.Visible = false
+SettingsContent.Parent = ContentFrame
+
+-- Champ de texte pour la tâche
+local TaskInput = Instance.new("TextBox")
+TaskInput.Name = "TaskInput"
+TaskInput.Size = UDim2.new(0.8, 0, 0.3, 0)
+TaskInput.Position = UDim2.new(0.1, 0, 0.1, 0)
+TaskInput.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
+TaskInput.PlaceholderText = "Entrez votre tâche ici..."
+TaskInput.Text = ""
+TaskInput.Font = Enum.Font.Gotham
+TaskInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+TaskInput.TextSize = 16
+TaskInput.Parent = SettingsContent
+createUICorner(TaskInput, 8)
+
+-- Bouton pour définir la tâche
+local SetTaskButton = Instance.new("TextButton")
+SetTaskButton.Name = "SetTaskButton"
+SetTaskButton.Size = UDim2.new(0.5, 0, 0.2, 0)
+SetTaskButton.Position = UDim2.new(0.25, 0, 0.5, 0)
+SetTaskButton.BackgroundColor3 = Color3.fromRGB(59, 165, 93)
+SetTaskButton.Text = "Définir la tâche"
+SetTaskButton.Font = Enum.Font.GothamBold
+SetTaskButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SetTaskButton.TextSize = 16
+SetTaskButton.Parent = SettingsContent
+createUICorner(SetTaskButton, 8)
+
+-- Variables pour le chronomètre
+local startTime = os.time()
+local timer = 0
+local fps = 0
+local fpsLastUpdate = os.clock()
+local frameCount = 0
+
+-- Fonction pour formater le temps en minutes et secondes
+local function formatTime(seconds)
+    local minutes = math.floor(seconds / 60)
+    local remainingSeconds = seconds % 60
+    return minutes .. "m " .. remainingSeconds .. "s"
+end
+
+-- Fonctions pour basculer entre les onglets
+InfoTab.MouseButton1Click:Connect(function()
+    InfoContent.Visible = true
+    SettingsContent.Visible = false
+    InfoTab.BackgroundColor3 = Color3.fromRGB(100, 181, 246)
+    SettingsTab.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
+end)
+
+SettingsTab.MouseButton1Click:Connect(function()
+    InfoContent.Visible = false
+    SettingsContent.Visible = true
+    InfoTab.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
+    SettingsTab.BackgroundColor3 = Color3.fromRGB(100, 181, 246)
+end)
+
+-- Fonction pour définir la tâche
+SetTaskButton.MouseButton1Click:Connect(function()
+    if TaskInput.Text ~= "" then
+        TaskLabel.Text = "Task: " .. TaskInput.Text
+        -- Retour à l'onglet d'information après avoir défini la tâche
+        InfoContent.Visible = true
+        SettingsContent.Visible = false
+        InfoTab.BackgroundColor3 = Color3.fromRGB(100, 181, 246)
+        SettingsTab.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
+    end
+end)
+
+-- Rendre le cadre principal déplaçable
+local isDragging = false
+local dragStart
+local startPos
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+    end
+end)
+
+MainFrame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = false
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement and isDragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X, 
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Fonction de compte à rebours (5 minutes)
+local countdownTime = 5 * 60
+local function updateCountdown()
+    local timeLeft = math.max(0, countdownTime - (os.time() - startTime))
+    local minutes = math.floor(timeLeft / 60)
+    local seconds = timeLeft % 60
+    TitleLabel.Text = "Thời Gian Còn Lại: " .. string.format("%02d:%02d", minutes, seconds)
+end
+
+-- Mise à jour des informations en temps réel
+RunService.RenderStepped:Connect(function(deltaTime)
+    -- Mise à jour du temps écoulé
+    timer = os.time() - startTime
+    
+    -- Calcul des FPS
+    frameCount = frameCount + 1
+    if os.clock() - fpsLastUpdate >= 1 then
+        fps = math.round(frameCount / (os.clock() - fpsLastUpdate))
+        frameCount = 0
+        fpsLastUpdate = os.clock()
+    end
+    
+    -- Mise à jour du texte
+    TimeLabel.Text = "Time: " .. formatTime(timer) .. " - FPS: " .. fps
+    
+    -- Mise à jour du compte à rebours
+    updateCountdown()
+end)
+
+-- Affichage du Job ID (Game ID)
+local success, gameId = pcall(function()
+    return game.JobId
+end)
+
+if success then
+    JobIdLabel.Text = "Job Id: " .. gameId
+else
+    JobIdLabel.Text = "Job Id: Indisponible"
+end
+
+-- Message de confirmation dans la console
+print("GUI de suivi des tâches chargée avec succès!")
